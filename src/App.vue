@@ -87,10 +87,12 @@
                 <svg v-else-if="tab.id === 'juegos'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>
                 <svg v-else-if="tab.id === 'machote'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
                 <svg v-else-if="tab.id === 'teoria'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
-                <svg v-else-if="tab.id === 'simulador'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
+                <svg v-else-if="tab.id === 'simulador'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 18h.01M12 18h.01M8 18h.01"/></svg>
+                <svg v-else-if="tab.id === 'admin'" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                 <span>{{ tab.name }}</span>
               </div>
               <span v-if="tab.id === 'juegos'" class="text-[9px] px-2 py-0.5 bg-rose-500 text-white rounded-md uppercase font-black">Principal</span>
+              <span v-else-if="tab.id === 'admin'" class="text-[9px] px-2 py-0.5 bg-emerald-600 text-white rounded-md uppercase font-black">Editar</span>
             </button>
           </div>
         </div>
@@ -133,7 +135,7 @@
             class="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-2xl font-bold text-xs transition flex items-center justify-center gap-2 shadow-md shadow-rose-500/20"
           >
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
-            <span>Iniciar Sesión para Editar</span>
+            <span>Iniciar Sesión</span>
           </button>
         </div>
       </div>
@@ -160,6 +162,7 @@
           <svg v-else-if="tab.id === 'machote'" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
           <svg v-else-if="tab.id === 'teoria'" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10"/></svg>
           <svg v-else-if="tab.id === 'simulador'" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01M12 10h.01M8 10h.01M12 14h.01M8 14h.01M12 18h.01M8 18h.01"/></svg>
+          <svg v-else-if="tab.id === 'admin'" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
           <span>{{ tab.name }}</span>
         </button>
       </div>
@@ -176,9 +179,7 @@
       />
       <MachoteViewer 
         v-else-if="currentTab === 'machote'" 
-        @open-create="openModal(null)" 
-        @edit-item="openModal" 
-        @require-auth="promptLogin"
+        @open-admin="switchTab('admin')"
       />
       <ConceptosViewer 
         v-else-if="currentTab === 'teoria'" 
@@ -186,14 +187,12 @@
       <BalanceSimulator 
         v-else-if="currentTab === 'simulador'" 
       />
+      <AdminPanel 
+        v-else-if="currentTab === 'admin'" 
+      />
     </main>
 
     <!-- Modales -->
-    <ItemModal 
-      :is-open="isModalOpen" 
-      :item-data="editingItem" 
-      @close="isModalOpen = false" 
-    />
     <LoginModal 
       :is-open="isLoginOpen" 
       :notice-message="loginNotice"
@@ -212,7 +211,7 @@ import GameCenter from './components/GameCenter.vue'
 import MachoteViewer from './components/MachoteViewer.vue'
 import ConceptosViewer from './components/ConceptosViewer.vue'
 import BalanceSimulator from './components/BalanceSimulator.vue'
-import ItemModal from './components/ItemModal.vue'
+import AdminPanel from './components/AdminPanel.vue'
 import LoginModal from './components/LoginModal.vue'
 
 const store = useAccountingStore()
@@ -220,11 +219,9 @@ const authStore = useAuthStore()
 
 const currentTab = ref('inicio')
 const splashKey = ref(1)
-const isModalOpen = ref(false)
 const isLoginOpen = ref(false)
 const isMenuOpen = ref(false)
 const loginNotice = ref('')
-const editingItem = ref(null)
 const isDark = ref(localStorage.getItem('conta_theme') === 'dark')
 
 const tabs = [
@@ -232,7 +229,8 @@ const tabs = [
   { id: 'juegos', name: 'Centro de Retos' },
   { id: 'machote', name: 'Machote & Cuentas' },
   { id: 'teoria', name: 'Reglas & T de Mayor' },
-  { id: 'simulador', name: 'Simulador Balance' }
+  { id: 'simulador', name: 'Simulador Balance' },
+  { id: 'admin', name: 'Panel de Edición' }
 ]
 
 function goToHome() {
@@ -241,6 +239,10 @@ function goToHome() {
 }
 
 function switchTab(tabId) {
+  if (tabId === 'admin' && !authStore.user) {
+    promptLogin('Debes iniciar sesión para acceder al Panel Independiente de Edición de cuentas.')
+    return
+  }
   currentTab.value = tabId
   isMenuOpen.value = false
 }
@@ -262,17 +264,8 @@ function applyTheme() {
 }
 
 function promptLogin(msg = '') {
-  loginNotice.value = msg || 'Debes iniciar sesión para realizar modificaciones en el catálogo.'
+  loginNotice.value = msg || 'Debes iniciar sesión para acceder al Panel de Edición.'
   isLoginOpen.value = true
-}
-
-function openModal(item = null) {
-  if (!authStore.user) {
-    promptLogin('Debes iniciar sesión o ingresar como invitada para agregar o modificar cuentas.')
-    return
-  }
-  editingItem.value = item
-  isModalOpen.value = true
 }
 
 onMounted(() => {

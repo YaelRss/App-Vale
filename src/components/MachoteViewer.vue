@@ -1,6 +1,6 @@
 <template>
-  <div class="space-y-5 sm:space-y-8 max-w-6xl mx-auto pb-12">
-    <!-- Selector de Estados Financieros Adaptable -->
+  <div class="space-y-5 sm:space-y-8 max-w-6xl mx-auto pb-16 font-sans">
+    <!-- Encabezado del Machote / Consulta de Cuentas NIF -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
       <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 w-full sm:w-auto">
         <button 
@@ -18,13 +18,13 @@
         </button>
       </div>
 
+      <!-- Botón para Abrir Panel Independiente de Edición -->
       <button 
-        @click="handleCreate"
-        class="w-full sm:w-auto px-5 py-3 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-2xl text-xs sm:text-sm font-bold transition-all duration-150 flex items-center justify-center gap-2 shadow-md shadow-emerald-600/20 shrink-0"
+        @click="$emit('open-admin')"
+        class="w-full sm:w-auto px-5 py-3 bg-rose-500 hover:bg-rose-600 active:scale-95 text-white rounded-2xl text-xs sm:text-sm font-bold transition-all duration-150 flex items-center justify-center gap-2 shadow-md shadow-rose-500/20 shrink-0 touch-manipulation"
       >
-        <svg v-if="authStore.user" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        <svg v-else class="w-4 h-4 text-emerald-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <span>Nueva Cuenta</span>
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        <span>Abrir Panel de Edición NIF</span>
       </button>
     </div>
 
@@ -48,7 +48,7 @@
       </button>
     </div>
 
-    <!-- Contenedor del Machote Espacioso -->
+    <!-- Contenedor del Machote de Consulta Limpio -->
     <div v-if="selectedDoc" class="bg-white dark:bg-slate-900 border border-rose-100/80 dark:border-slate-800 rounded-3xl overflow-hidden shadow-xs">
       <div class="p-5 sm:p-8 bg-rose-50/50 dark:bg-slate-950/80 border-b border-rose-100/80 dark:border-slate-800 flex flex-col md:flex-row justify-between md:items-center gap-3">
         <div>
@@ -102,25 +102,6 @@
                   </p>
                 </div>
               </div>
-
-              <!-- Acciones Visibles Móviles y Escritorio -->
-              <div class="flex items-center gap-2 self-end sm:self-center shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800/60 w-full sm:w-auto justify-end">
-                <button 
-                  @click="handleEdit(item)" 
-                  class="px-3.5 py-2 text-xs bg-rose-100/80 hover:bg-rose-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-rose-800 dark:text-slate-200 rounded-xl font-semibold transition active:scale-95 flex items-center gap-1.5"
-                >
-                  <svg v-if="authStore.user" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                  <svg v-else class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  <span>Editar</span>
-                </button>
-                <button 
-                  @click="handleDelete(item.id)" 
-                  class="px-3.5 py-2 text-xs bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 dark:bg-rose-950/60 dark:hover:bg-rose-900 dark:border-rose-800/80 dark:text-rose-300 rounded-xl font-semibold transition active:scale-95 flex items-center gap-1.5"
-                >
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                  <span>Borrar</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -132,12 +113,10 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useAccountingStore } from '../stores/useAccountingStore'
-import { useAuthStore } from '../stores/useAuthStore'
 
-const emit = defineEmits(['open-create', 'edit-item', 'require-auth'])
+defineEmits(['open-admin'])
 
 const store = useAccountingStore()
-const authStore = useAuthStore()
 const selectedDoc = ref(null)
 const search = ref('')
 
@@ -146,30 +125,6 @@ watch(() => store.documents, (newDocs) => {
     selectedDoc.value = newDocs.find(d => d.short_code === 'ERI') || newDocs[0]
   }
 }, { immediate: true })
-
-function handleCreate() {
-  if (!authStore.user) {
-    emit('require-auth', 'Debes iniciar sesión para agregar nuevas cuentas al catálogo.')
-    return
-  }
-  emit('open-create')
-}
-
-function handleEdit(item) {
-  if (!authStore.user) {
-    emit('require-auth', 'Debes iniciar sesión para editar los datos de las cuentas.')
-    return
-  }
-  emit('edit-item', item)
-}
-
-function handleDelete(id) {
-  if (!authStore.user) {
-    emit('require-auth', 'Debes iniciar sesión para eliminar cuentas.')
-    return
-  }
-  store.deleteItem(id)
-}
 
 const getNatureBadge = (nature) => {
   const colors = {
