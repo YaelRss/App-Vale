@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'ContaMaster Valeria',
-        short_name: 'ContaMaster',
+        name: 'Conta App - Valeria',
+        short_name: 'Conta App',
         description: 'Plataforma NIF de estudio y consulta contable',
         theme_color: '#fff1f2',
         background_color: '#fff1f2',
