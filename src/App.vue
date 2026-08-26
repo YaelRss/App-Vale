@@ -28,7 +28,7 @@
             <!-- Sol para modo claro -->
             <svg v-if="isDark" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
             <!-- Luna para modo oscuro -->
-            <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 0 1 1-9-9Z"/></svg>
+            <svg v-else class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
           </button>
 
           <!-- Badge Online / Offline -->
@@ -44,7 +44,7 @@
           <!-- Usuario / Auth Button -->
           <button 
             v-if="!authStore.user" 
-            @click="isLoginOpen = true"
+            @click="promptLogin('')"
             class="px-2.5 sm:px-3 py-1.5 bg-rose-500 hover:bg-rose-600 active:scale-95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-md shadow-rose-500/20"
           >
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
@@ -112,6 +112,7 @@
         v-else-if="currentTab === 'machote'" 
         @open-create="openModal(null)" 
         @edit-item="openModal" 
+        @require-auth="promptLogin"
       />
       <ConceptosViewer 
         v-else-if="currentTab === 'teoria'" 
@@ -129,7 +130,8 @@
     />
     <LoginModal 
       :is-open="isLoginOpen" 
-      @close="isLoginOpen = false" 
+      :notice-message="loginNotice"
+      @close="isLoginOpen = false; loginNotice = ''" 
     />
   </div>
 </template>
@@ -152,6 +154,7 @@ const authStore = useAuthStore()
 const currentTab = ref('inicio')
 const isModalOpen = ref(false)
 const isLoginOpen = ref(false)
+const loginNotice = ref('')
 const editingItem = ref(null)
 const isDark = ref(localStorage.getItem('conta_theme') === 'dark')
 
@@ -179,7 +182,16 @@ function applyTheme() {
   }
 }
 
+function promptLogin(msg = '') {
+  loginNotice.value = msg || 'Debes iniciar sesión para realizar modificaciones en el catálogo.'
+  isLoginOpen.value = true
+}
+
 function openModal(item = null) {
+  if (!authStore.user) {
+    promptLogin('Debes iniciar sesión o ingresar como invitada para agregar o modificar cuentas.')
+    return
+  }
   editingItem.value = item
   isModalOpen.value = true
 }

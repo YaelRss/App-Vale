@@ -7,28 +7,39 @@
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
-  
-  body {
-    @apply bg-rose-50/40 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen font-sans antialiased transition-colors duration-200;
-    overflow-x: hidden;
-  }
 }
 
-/* Ocultar barra de desplazamiento manteniendo funcionalidad táctil */
+/* Ocultar barra o badge publicitaria inyectada de Netlify */
+#netlify-drawer,
+#netlify-badge,
+[data-netlify-badge],
+[id*="netlify"],
+iframe[src*="netlify"],
+.netlify-badge-container,
+div[class*="netlify-drawer"],
+div[class*="netlify-badge"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+}
+
+/* Ocultar barra de desplazamiento en contenedores horizontales */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
 }
 
-/* Animaciones ligeras optimizadas para móviles */
+/* Animaciones suaves para dispositivos móviles */
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -39,7 +50,7 @@
 @keyframes popIn {
   from {
     opacity: 0;
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
   to {
     opacity: 1;
@@ -48,14 +59,9 @@
 }
 
 .animate-slide-up {
-  animation: slideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideUp 0.22s ease-out forwards;
 }
 
 .animate-pop-in {
-  animation: popIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Interacción táctil suave */
-button, input, select, textarea {
-  touch-action: manipulation;
+  animation: popIn 0.18s ease-out forwards;
 }

@@ -19,10 +19,11 @@
       </div>
 
       <button 
-        @click="$emit('open-create')"
+        @click="handleCreate"
         class="w-full sm:w-auto px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white rounded-xl text-xs font-bold transition-all duration-150 flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 shrink-0"
       >
-        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg v-if="authStore.user" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <svg v-else class="w-3.5 h-3.5 text-emerald-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         <span>Nueva Cuenta</span>
       </button>
     </div>
@@ -105,14 +106,15 @@
               <!-- Acciones Visibles Móviles y Escritorio -->
               <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800/60 w-full sm:w-auto justify-end">
                 <button 
-                  @click="$emit('edit-item', item)" 
+                  @click="handleEdit(item)" 
                   class="px-3 py-1.5 text-[11px] bg-rose-100/80 hover:bg-rose-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-rose-800 dark:text-slate-200 rounded-lg font-semibold transition active:scale-95 flex items-center gap-1"
                 >
-                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <svg v-if="authStore.user" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                  <svg v-else class="w-3 h-3 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   <span>Editar</span>
                 </button>
                 <button 
-                  @click="store.deleteItem(item.id)" 
+                  @click="handleDelete(item.id)" 
                   class="px-3 py-1.5 text-[11px] bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-600 dark:bg-rose-950/60 dark:hover:bg-rose-900 dark:border-rose-800/80 dark:text-rose-300 rounded-lg font-semibold transition active:scale-95 flex items-center gap-1"
                 >
                   <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
@@ -130,8 +132,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useAccountingStore } from '../stores/useAccountingStore'
+import { useAuthStore } from '../stores/useAuthStore'
+
+const emit = defineEmits(['open-create', 'edit-item', 'require-auth'])
 
 const store = useAccountingStore()
+const authStore = useAuthStore()
 const selectedDoc = ref(null)
 const search = ref('')
 
@@ -140,6 +146,30 @@ watch(() => store.documents, (newDocs) => {
     selectedDoc.value = newDocs.find(d => d.short_code === 'ERI') || newDocs[0]
   }
 }, { immediate: true })
+
+function handleCreate() {
+  if (!authStore.user) {
+    emit('require-auth', 'Debes iniciar sesión para agregar nuevas cuentas al catálogo.')
+    return
+  }
+  emit('open-create')
+}
+
+function handleEdit(item) {
+  if (!authStore.user) {
+    emit('require-auth', 'Debes iniciar sesión para editar los datos de las cuentas.')
+    return
+  }
+  emit('edit-item', item)
+}
+
+function handleDelete(id) {
+  if (!authStore.user) {
+    emit('require-auth', 'Debes iniciar sesión para eliminar cuentas.')
+    return
+  }
+  store.deleteItem(id)
+}
 
 const getNatureBadge = (nature) => {
   const colors = {
