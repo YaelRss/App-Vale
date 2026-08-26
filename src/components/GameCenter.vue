@@ -1,22 +1,22 @@
 <template>
-  <div class="max-w-xl mx-auto space-y-5 pb-12">
-    <!-- Selector de Modos de Juego -->
-    <div class="grid grid-cols-3 gap-1.5 bg-slate-900 border border-slate-800 p-1.5 rounded-2xl text-xs font-bold text-slate-400">
+  <div class="max-w-xl mx-auto space-y-4 sm:space-y-5 pb-12">
+    <!-- Selector de Modos de Juego Adaptable -->
+    <div class="grid grid-cols-3 gap-1 bg-white dark:bg-slate-900 border border-rose-100 dark:border-slate-800 p-1.5 rounded-2xl text-xs font-bold text-slate-500 dark:text-slate-400 shadow-xs">
       <button 
         v-for="mode in modes" 
         :key="mode.id"
         @click="currentMode = mode.id; resetGame()"
-        :class="currentMode === mode.id ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30' : 'hover:text-slate-200'"
-        class="py-2.5 rounded-xl transition text-center flex items-center justify-center gap-1.5"
+        :class="currentMode === mode.id ? 'bg-rose-500 text-white shadow-md shadow-rose-500/20 font-bold' : 'hover:text-rose-600 dark:hover:text-slate-200'"
+        class="py-2.5 rounded-xl transition-all duration-150 text-center flex items-center justify-center gap-1 touch-manipulation px-1 active:scale-95"
       >
-        <span>{{ mode.name }}</span>
+        <span class="truncate">{{ mode.name }}</span>
       </button>
     </div>
 
     <!-- Marcador y Vidas -->
-    <div class="flex items-center justify-between px-5 py-3.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-xs text-xs font-bold">
-      <div class="flex items-center gap-1.5 text-amber-400 font-mono">
-        <svg class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"/></svg>
+    <div class="flex items-center justify-between px-4 sm:px-5 py-3 bg-white dark:bg-slate-900 border border-rose-100 dark:border-slate-800 rounded-2xl shadow-xs text-xs font-bold">
+      <div class="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-mono text-[11px] sm:text-xs">
+        <svg class="w-4 h-4 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 3.5z"/></svg>
         <span>Racha: {{ streak }} (Máx: {{ maxStreak }})</span>
       </div>
 
@@ -24,8 +24,8 @@
         <svg 
           v-for="i in 3" 
           :key="i"
-          class="w-4 h-4"
-          :class="i <= lives ? 'text-rose-500 fill-rose-500' : 'text-slate-700'"
+          class="w-4 h-4 shrink-0 transition-transform duration-150"
+          :class="i <= lives ? 'text-rose-500 fill-rose-500 scale-105' : 'text-slate-300 dark:text-slate-700'"
           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
         >
           <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
@@ -33,37 +33,37 @@
       </div>
     </div>
 
-    <!-- Carta de Juego Activa -->
-    <div v-if="activeCard" class="p-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-xl text-center space-y-6">
-      <div class="text-[10px] uppercase font-mono tracking-widest text-indigo-400 font-bold">
+    <!-- Carta de Juego Activa Adaptable y Animada sin difuminados -->
+    <div v-if="activeCard" class="p-5 sm:p-8 bg-white dark:bg-slate-900 border border-rose-100 dark:border-slate-800 rounded-2xl sm:rounded-3xl shadow-xs text-center space-y-5 sm:space-y-6 animate-pop-in">
+      <div class="text-[10px] uppercase font-mono tracking-widest text-rose-500 font-bold">
         {{ getPromptText() }}
       </div>
 
       <div class="space-y-1">
-        <h3 class="text-2xl font-black text-slate-100">{{ activeCard.displayTitle }}</h3>
-        <p v-if="activeCard.subtitle" class="text-xs font-mono text-slate-400">{{ activeCard.subtitle }}</p>
+        <h3 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100 leading-tight">{{ activeCard.displayTitle }}</h3>
+        <p v-if="activeCard.subtitle" class="text-xs font-mono text-slate-500 dark:text-slate-400 leading-relaxed">{{ activeCard.subtitle }}</p>
       </div>
 
-      <!-- Opciones -->
-      <div class="grid grid-cols-2 gap-2.5 pt-2">
+      <!-- Opciones Adaptables y Animadas -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
         <button 
           v-for="opt in currentOptions" 
           :key="opt.value"
           @click="submitAnswer(opt.value)"
-          class="p-3.5 bg-slate-950 hover:bg-indigo-600 hover:text-white border border-slate-800 hover:border-indigo-600 rounded-2xl text-xs font-bold transition text-slate-200 shadow-sm"
+          class="p-3 sm:p-3.5 bg-rose-50/40 dark:bg-slate-950 hover:bg-rose-500 hover:text-white dark:hover:bg-rose-500 dark:hover:text-white active:scale-95 border border-rose-100 dark:border-slate-800 hover:border-rose-500 rounded-2xl text-xs font-bold transition-all duration-150 text-slate-700 dark:text-slate-200 shadow-xs flex items-center justify-center text-center min-h-[44px] touch-manipulation"
         >
-          {{ opt.label }}
+          <span>{{ opt.label }}</span>
         </button>
       </div>
 
       <!-- Retroalimentación con SVGs -->
       <div 
         v-if="feedback" 
-        :class="feedback.correct ? 'text-emerald-300 bg-emerald-950/60 border-emerald-800' : 'text-rose-300 bg-rose-950/60 border-rose-800'"
-        class="p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2"
+        :class="feedback.correct ? 'text-emerald-800 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/60 dark:border-emerald-800' : 'text-rose-800 bg-rose-50 border-rose-200 dark:text-rose-300 dark:bg-rose-950/60 dark:border-rose-800'"
+        class="p-3 sm:p-3.5 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 leading-relaxed animate-slide-up"
       >
-        <svg v-if="feedback.correct" class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
-        <svg v-else class="w-4 h-4 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <svg v-if="feedback.correct" class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+        <svg v-else class="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
         <span>{{ feedback.message }}</span>
       </div>
     </div>
