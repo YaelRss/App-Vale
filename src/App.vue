@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen flex flex-col bg-rose-50/40 dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
     <!-- Pantalla Inicial de Carga (Splash Screen) -->
-    <SplashScreen />
+    <SplashScreen :trigger-key="splashKey" />
 
     <!-- Header Superior Minimalista y Elegante -->
     <header class="sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-rose-100/80 dark:border-slate-800 px-4 sm:px-6 py-3 shadow-xs">
       <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
         <!-- Logo / Marca Conta App & Calculadora Kawaii Tierna -->
-        <div @click="currentTab = 'inicio'" class="flex items-center gap-3 cursor-pointer group">
+        <div @click="goToHome" class="flex items-center gap-3 cursor-pointer group">
           <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-rose-500 to-pink-400 flex items-center justify-center text-white shadow-md shadow-rose-500/25 shrink-0 overflow-hidden p-1 group-hover:scale-105 transition duration-150">
             <img src="/favicon.svg" alt="Calculadora Kawaii" class="w-full h-full object-contain" />
           </div>
@@ -72,7 +72,7 @@
             <button 
               v-for="tab in tabs" 
               :key="tab.id"
-              @click="currentTab = tab.id; isMenuOpen = false"
+              @click="switchTab(tab.id)"
               :class="[
                 'w-full p-3.5 rounded-2xl transition-all duration-150 flex items-center justify-between text-xs font-bold text-left touch-manipulation active:scale-95',
                 currentTab === tab.id 
@@ -145,7 +145,7 @@
         <button 
           v-for="tab in tabs" 
           :key="tab.id"
-          @click="currentTab = tab.id"
+          @click="switchTab(tab.id)"
           :class="[
             'px-4 py-2.5 rounded-2xl transition-all duration-150 whitespace-nowrap flex items-center gap-2 shrink-0 touch-manipulation active:scale-95 text-xs sm:text-sm',
             currentTab === tab.id 
@@ -169,7 +169,7 @@
     <main class="flex-1 p-4 sm:p-6 md:p-8 max-w-6xl mx-auto w-full animate-slide-up">
       <HomeDashboard 
         v-if="currentTab === 'inicio'" 
-        @select-tab="currentTab = $event" 
+        @select-tab="switchTab" 
       />
       <GameCenter 
         v-else-if="currentTab === 'juegos'" 
@@ -219,6 +219,7 @@ const store = useAccountingStore()
 const authStore = useAuthStore()
 
 const currentTab = ref('inicio')
+const splashKey = ref(1)
 const isModalOpen = ref(false)
 const isLoginOpen = ref(false)
 const isMenuOpen = ref(false)
@@ -233,6 +234,16 @@ const tabs = [
   { id: 'teoria', name: 'Reglas & T de Mayor' },
   { id: 'simulador', name: 'Simulador Balance' }
 ]
+
+function goToHome() {
+  currentTab.value = 'inicio'
+  splashKey.value++
+}
+
+function switchTab(tabId) {
+  currentTab.value = tabId
+  isMenuOpen.value = false
+}
 
 function toggleTheme() {
   isDark.value = !isDark.value

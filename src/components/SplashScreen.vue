@@ -35,17 +35,55 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
+  triggerKey: {
+    type: [Number, String],
+    default: 0
+  }
+})
 
 const isVisible = ref(true)
 const isFading = ref(false)
+let timer1 = null
+let timer2 = null
 
-onMounted(() => {
-  setTimeout(() => {
+function startSplash() {
+  isVisible.value = true
+  isFading.value = false
+
+  if (timer1) clearTimeout(timer1)
+  if (timer2) clearTimeout(timer2)
+
+  timer1 = setTimeout(() => {
     isFading.value = true
-    setTimeout(() => {
+    timer2 = setTimeout(() => {
       isVisible.value = false
     }, 500)
-  }, 1600)
+  }, 1400)
+}
+
+watch(() => props.triggerKey, () => {
+  startSplash()
+})
+
+function handleVisibilityChange() {
+  if (document.visibilityState === 'visible') {
+    startSplash()
+  }
+}
+
+onMounted(() => {
+  startSplash()
+  document.addEventListener('visibilitychange', handleVisibilityChange)
+  window.addEventListener('pageshow', startSplash)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
+  window.removeEventListener('pageshow', startSplash)
+  if (timer1) clearTimeout(timer1)
+  if (timer2) clearTimeout(timer2)
 })
 </script>
